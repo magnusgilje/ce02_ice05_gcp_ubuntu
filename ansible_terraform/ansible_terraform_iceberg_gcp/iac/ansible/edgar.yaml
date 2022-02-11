@@ -1,0 +1,39 @@
+---
+- name: ansible create edgar folder
+  file:
+    path: /tmp/edgar
+    state: directory
+    mode: "u=rw,g=wx,o=rwx"
+- name: Copy edgar files for edgar
+  ansible.builtin.copy:
+    src: ../../src_ansible/edgar/
+    dest: /tmp/edgar
+- name: create ansible temp folder
+  file:
+    path: /tmp/edgar/temp/junk/10k_reports_raw
+    state: directory
+    mode: "u=rw,g=wx,o=rwx"
+- name: create api folder
+  file:
+    path: /tmp/api
+    state: directory
+    mode: "u=rw,g=wx,o=rwx"
+- name: copy api files
+  ansible.builtin.copy:
+    src: ../../src_ansible/api/
+    dest: /tmp/api
+- name: Install python3-pip  (state=present is optional)
+  apt:
+    name: python3-pip
+    state: present
+- name: Install specified python requirements
+  pip:
+    requirements: /tmp/edgar/requirements.txt
+# - name: localhost FastAPI
+#   shell:
+#     cmd: uvicorn main:app --reload --host 127.0.0.1 --port 8000
+#     chdir: /tmp/api/
+# - name: execute example script
+#   shell:
+#     cmd: python3 -m ex_edgar_downloader
+#     chdir: /tmp/edgar/example/
